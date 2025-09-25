@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thông Tin Thanh Toán</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6a11cb;
+      --secondary: #2575fc;
+      --accent: #00f2fe;
+      --card-bg: rgba(255,255,255,0.08);
+      --border: 1px solid rgba(255,255,255,0.2);
+      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    * {margin:0;padding:0;box-sizing:border-box;}
+    body {
+      font-family:'Poppins',sans-serif;
+      min-height:100vh;
+      background:linear-gradient(-45deg,var(--primary),var(--secondary),#000);
+      background-size:300% 300%;
+      animation:gradient 20s ease infinite;
+      display:flex;flex-direction:column;align-items:center;
+      color:#e2e8f0;overflow-x:hidden;
+    }
+    @keyframes gradient {0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+    /* Loader */
+    #loader {
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:#0f0f1a;display:flex;align-items:center;justify-content:center;
+      z-index:2000;
+    }
+    .spinner {
+      border:6px solid rgba(255,255,255,0.2);
+      border-top:6px solid var(--accent);
+      border-radius:50%;width:60px;height:60px;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin {100%{transform:rotate(360deg);}}
+    /* Particles */
+    canvas#particles {position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
+    .container {position:relative;z-index:1;max-width:1000px;width:100%;padding:20px;}
+    header {text-align:center;margin-top:40px;}
+    header h1 {
+      font-family:'Playfair Display',serif;
+      font-size:2.5em;font-weight:700;color:#fff;margin-bottom:15px;
+    }
+    header p {font-size:1.1em;opacity:0.85;margin-top:5px;}
+    .typewriter {display:inline-block;overflow:hidden;border-right:.15em solid var(--accent);white-space:nowrap;animation:typing 3s steps(30,end),blink .75s step-end infinite;}
+    @keyframes typing {from{width:0}to{width:100%}}
+    @keyframes blink {50%{border-color:transparent}}
+    .info {text-align:center;margin:25px 0;font-size:1.1em;font-weight:500;}
+    .bank-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:30px;}
+    .bank-card {
+      background:var(--card-bg);
+      border-radius:18px;border:var(--border);
+      backdrop-filter:blur(20px);
+      padding:25px;text-align:center;
+      box-shadow:var(--shadow);
+      opacity:0;transform:translateY(40px);
+      animation:fadeUp 1s forwards;
+    }
+    .bank-card:nth-child(1){animation-delay:.3s;}
+    .bank-card:nth-child(2){animation-delay:.6s;}
+    @keyframes fadeUp {to{opacity:1;transform:translateY(0);}}
+    .bank-card img{width:70px;height:70px;margin-bottom:15px;}
+    .bank-card h2{font-size:1.4em;margin-bottom:10px;color:#fff;}
+    .bank-card p{color:#cbd5e1;margin-bottom:20px;}
+    .qr-section img{
+      width:120px;height:120px;border-radius:12px;
+      background:rgba(255,255,255,0.05);
+      box-shadow:0 0 15px rgba(0,242,254,0.3);
+      transition:all .3s;
+    }
+    .qr-section img:hover{transform:scale(1.05);box-shadow:0 0 25px rgba(106,17,203,0.6);}
+    .btn-group{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;}
+    button,.transfer-btn{
+      padding:12px 24px;border:none;border-radius:12px;cursor:pointer;font-weight:600;font-size:.95em;
+      display:inline-flex;align-items:center;gap:8px;
+      color:white;position:relative;overflow:hidden;
+    }
+    button{background:linear-gradient(135deg,#00f2fe,#4facfe);}
+    .transfer-btn{background:linear-gradient(135deg,#6a11cb,#2575fc);text-decoration:none;}
+    button::after,.transfer-btn::after{
+      content:"";position:absolute;top:0;left:-100%;width:200%;height:100%;
+      background:rgba(255,255,255,0.2);transform:skewX(-45deg);
+      transition:left .5s;
+    }
+    button:hover::after,.transfer-btn:hover::after{left:100%;}
+    button:hover,.transfer-btn:hover{box-shadow:0 0 20px rgba(0,242,254,0.5);}
+    footer{text-align:center;padding:30px;font-size:.9em;opacity:.8;}
+    .telegram-link{color:var(--accent);text-decoration:none;}
+    .telegram-link:hover{text-decoration:underline;}
+    /* Modal & Toast */
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1500;align-items:center;justify-content:center;}
+    .modal-content{background:#1a1a2e;border-radius:16px;padding:30px;max-width:420px;width:90%;text-align:center;animation:fadeUp .5s;}
+    .modal-content h2{margin-bottom:15px;color:#fff;}
+    .modal-btn{margin-top:20px;padding:10px 22px;border:none;border-radius:10px;background:linear-gradient(135deg,#00f2fe,#4facfe);color:white;font-weight:600;cursor:pointer;}
+    .toast{position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:12px 20px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.3);opacity:0;transform:translateX(100%);transition:all .3s;z-index:2000;}
+    .toast.show{opacity:1;transform:translateX(0);}
+    @media(max-width:600px){
+      header h1{font-size:1.8em;}
+      .bank-card{padding:20px;}
+      .qr-section img{width:100px;height:100px;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader"><div class="spinner"></div></div>
+  <!-- Particles -->
+  <canvas id="particles"></canvas>
+
+  <!-- Modal -->
+  <div id="welcomeModal" class="modal">
+    <div class="modal-content">
+      <h2>Xin chào!</h2>
+      <p>Hãy thực hiện thanh toán an toàn & nhanh chóng 🚀</p>
+      <button class="modal-btn" onclick="closeModal()">Bắt đầu</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="copyToast" class="toast">Đã copy số tài khoản!</div>
+  <div id="transferToast" class="toast" style="background:linear-gradient(135deg,#00f2fe,#4facfe);">Đang mở app ngân hàng...</div>
+
+  <div class="container" style="display:none;">
+    <header>
+      <h1><span class="typewriter">Thông Tin Thanh Toán</span></h1>
+      <p>Thanh toán nhanh chóng & an toàn – powered by DEV TANPHAT</p>
+      <div id="datetime" class="datetime"></div>
+    </header>
+
+    <div class="info">Tất cả tài khoản mang tên: <strong>TRAN TAN PHAT</strong></div>
+
+    <div class="bank-grid">
+      <!-- BIDV -->
+      <div class="bank-card">
+        <img src="https://iconape.com/wp-content/files/zi/209392/png/bidv-logo.png" alt="BIDV">
+        <h2>BIDV</h2>
+        <p>Số tài khoản: 8872060824</p>
+        <div class="qr-section">
+          <img src="https://api.vietqr.io/bidv/8872060824/0/Thanh%20toan.jpg?accountName=TRAN%20TAN%20PHAT" alt="QR BIDV">
+        </div>
+        <div class="btn-group">
+          <button onclick="copyToClipboard('8872060824')">📋 Copy</button>
+          <a href="bidvsmartbanking://transfer?account=8872060824" onclick="showTransferToast()" class="transfer-btn">➡ Chuyển</a>
+        </div>
+      </div>
+      <!-- MBBank -->
+      <div class="bank-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Logo_MB_new.png" alt="MBBank">
+        <h2>MBBank</h2>
+        <p>Số tài khoản: 768558</p>
+        <div class="qr-section">
+          <img src="https://api.vietqr.io/mbbank/768558/0/Thanh%20toan.jpg?accountName=TRAN%20TAN%20PHAT" alt="QR MBBank">
+        </div>
+        <div class="btn-group">
+          <button onclick="copyToClipboard('768558')">📋 Copy</button>
+          <a href="mbapp://transfer?account=768558" onclick="showTransferToast()" class="transfer-btn">➡ Chuyển</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Hỗ trợ: <a href="https://t.me/useriamtp" target="_blank" class="telegram-link">@useriamtp</a>
+    </footer>
+  </div>
+
+  <script>
+    // Loader
+    window.addEventListener("load",()=>{
+      setTimeout(()=>{
+        document.getElementById("loader").style.display="none";
+        document.querySelector(".container").style.display="block";
+        document.getElementById("welcomeModal").style.display="flex";
+      },2000);
+    });
+    // Copy & Toast
+    function copyToClipboard(text){
+      navigator.clipboard.writeText(text).then(()=>{
+        const toast=document.getElementById('copyToast');
+        toast.classList.add('show');
+        setTimeout(()=>toast.classList.remove('show'),3000);
+      });
+    }
+    function showTransferToast(){
+      const toast=document.getElementById('transferToast');
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),2000);
+    }
+    // Modal
+    function closeModal(){document.getElementById('welcomeModal').style.display="none";}
+    // Datetime
+    function updateDateTime(){
+      const now=new Date();
+      const day=now.toLocaleDateString('vi-VN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+      const time=now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      document.getElementById('datetime').innerHTML=`${day} - ${time}`;
+    }
+    setInterval(updateDateTime,1000);updateDateTime();
+    // Particles
+    const canvas=document.getElementById('particles');const ctx=canvas.getContext('2d');
+    let particles=[];
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+    window.addEventListener('resize',resize);resize();
+    function initParticles(){particles=[];for(let i=0;i<70;i++){particles.push({
+      x:Math.random()*canvas.width,y:Math.random()*canvas.height,
+      r:Math.random()*3+2,dx:(Math.random()-0.5)*0.4,dy:(Math.random()-0.5)*0.4,
+      color:`hsla(${200+Math.random()*100},80%,70%,0.8)`
+    });}}
+    function drawParticles(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p=>{
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=p.color;ctx.fill();
+        p.x+=p.dx;p.y+=p.dy;
+        if(p.x<0||p.x>canvas.width)p.dx*=-1;
+        if(p.y<0||p.y>canvas.height)p.dy*=-1;
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    initParticles();drawParticles();
+  </script>
+</body>
+</html>
