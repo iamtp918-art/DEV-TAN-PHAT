@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Thư Gửi Vợ Yêu</title>
+  <meta name="color-scheme" content="dark light">
+  <style>
+    /* =========================================================
+       THEME & RESET
+       ========================================================= */
+    :root{
+      --bg1:#0b0b14;
+      --bg2: radial-gradient(1200px 800px at 10% -10%, #5c3aff33, transparent 60%),
+             radial-gradient(1200px 800px at 110% 10%, #ff4d9e2b, transparent 50%),
+             radial-gradient(1600px 1000px at 50% 120%, #2cd6ff29, transparent 55%),
+             linear-gradient(180deg,#0b0b14 0%, #111223 100%);
+      --glass: rgba(255,255,255,.08);
+      --glass-strong: rgba(255,255,255,.14);
+      --stroke: rgba(255,255,255,.18);
+      --txt: #eef2ff;
+      --muted:#a9b0c7;
+      --primary:#c7a6ff; /* tím pastel */
+      --accent:#ff9bd2;  /* hồng pastel */
+      --teal:#9be8ff;    /* xanh pastel */
+      --ok:#9dffcf;
+      --warn:#ffd1a1;
+      --shadow: 0 10px 40px #00000055, inset 0 1px 0 #ffffff10;
+      --radius: 22px;
+      --radius-lg: 26px;
+      --glow: 0 0 0 1px rgba(255,255,255,.06), 0 20px 50px #0006, 0 0 50px #9be8ff10, 0 0 60px #ff9bd210;
+      --ring: 0 0 0 3px #7c3aed44, 0 0 0 1px #ffffff1a;
+      --w-max: 760px;
+      --w-min: 320px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--txt);
+      background: var(--bg2);
+      overflow-x:hidden;
+    }
+    .script{
+      font-family: "Segoe Script","Apple Chancery","Lucida Handwriting","Brush Script MT", "Times New Roman", Georgia, serif;
+      letter-spacing:.2px;
+    }
+    .serif{
+      font-family: Georgia, "Times New Roman", ui-serif, serif;
+    }
+    .container{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: clamp(16px, 3vw, 36px);
+    }
+    .stack{display:flex; flex-direction:column; gap:18px; align-items:center; width:min(var(--w-max), 100%);}
+
+    /* glass card */
+    .card{
+      width:min(var(--w-max), 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      backdrop-filter: blur(16px) saturate(115%);
+      -webkit-backdrop-filter: blur(16px) saturate(115%);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--glow);
+      padding: clamp(18px, 3.2vw, 32px);
+    }
+
+    /* ---------------------------------------------------------
+       LOCK SCREEN
+       --------------------------------------------------------- */
+    #lock{
+      max-width: 540px;
+      gap: 14px;
+      text-align:center;
+      transform: translateZ(0);
+      will-change: transform, opacity, filter;
+      animation: floaty 8s var(--ease) infinite alternate;
+    }
+    @keyframes floaty{
+      from{ transform: translateY(-2px) }
+      to{ transform: translateY(4px) }
+    }
+    .title{
+      font-size: clamp(22px, 3.6vw, 32px);
+      font-weight: 700;
+      letter-spacing:.3px;
+      text-shadow: 0 1px 0 #0005;
+    }
+    .subtitle{
+      color: var(--muted);
+      font-size: clamp(14px, 2.2vw, 16px);
+    }
+    .field{
+      display:flex; gap:10px; width:100%; align-items:center; justify-content:center;
+    }
+    .input{
+      width:100%;
+      max-width: 360px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--stroke);
+      color: var(--txt);
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,.05), 0 10px 30px #0004;
+      transition: box-shadow .2s var(--ease), transform .2s var(--ease);
+    }
+    .input:focus{ box-shadow: var(--ring); }
+    .btn{
+      appearance:none;
+      border:0;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: linear-gradient(140deg, #7c3aed, #ff4da0 60%, #2dd4ff 120%);
+      color: #0b0b14;
+      font-weight: 700;
+      letter-spacing:.3px;
+      cursor:pointer;
+      box-shadow: 0 8px 24px #0007, inset 0 1px 0 #ffffff66;
+      transition: transform .15s var(--ease), filter .2s var(--ease), box-shadow .2s var(--ease);
+    }
+    .btn:hover{ filter: brightness(1.05) }
+    .btn:active{ transform: translateY(1px) scale(.995) }
+    .ghost{
+      background:rgba(255,255,255,.08);
+      color: var(--txt);
+      font-weight:600;
+    }
+    .hint{
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .error{
+      color: var(--warn);
+      min-height: 18px;
+      font-size: 14px;
+    }
+    .shake{
+      animation: shakeX .32s var(--ease);
+    }
+    @keyframes shakeX{
+      0%{ transform: translateX(0) }
+      25%{ transform: translateX(-5px) }
+      50%{ transform: translateX(4px) }
+      75%{ transform: translateX(-3px) }
+      100%{ transform: translateX(0) }
+    }
+
+    /* Heart icon */
+    .heart{
+      width:44px; height:44px;
+      filter: drop-shadow(0 6px 14px #ff4da044) drop-shadow(0 0 18px #7c3aed33);
+    }
+
+    /* fade-out of lock */
+    .fade-out{
+      animation: fadeOut .7s var(--ease) forwards;
+    }
+    @keyframes fadeOut{
+      to{ opacity:0; filter: blur(6px); transform: scale(.985) }
+    }
+
+    /* ---------------------------------------------------------
+       ENVELOPE (Invitation)
+       --------------------------------------------------------- */
+    #invite{ display:none; align-items:center; justify-content:center; width:100%;}
+    .invite-wrap{ display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; width:100%;}
+    .lead{
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .envelope{
+      position:relative;
+      width:min(460px, 90vw);
+      aspect-ratio: 4/3;
+      border-radius: var(--radius);
+      padding: 12px;
+      background: linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+      border:1px solid var(--stroke);
+      box-shadow: var(--glow);
+      cursor:pointer;
+      transform: scale(.96);
+      filter: blur(2px);
+      animation: envIn .9s var(--ease) .1s forwards;
+    }
+    @keyframes envIn{
+      to{ transform: scale(1); filter: blur(0) }
+    }
+    .envelope:after{
+      /* tooltip */
+      content: attr(data-tip);
+      position:absolute;
+      bottom: -38px; left:50%; transform: translateX(-50%);
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--stroke);
+      color: var(--txt);
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+      opacity:.85;
+    }
+    .envelope-inner{
+      width:100%; height:100%;
+      display:grid; place-items:center;
+      border-radius: calc(var(--radius) - 8px);
+      background:
+        radial-gradient(120% 80% at 20% 0%, #ff9bd215, transparent 50%),
+        radial-gradient(100% 120% at 80% 100%, #9be8ff12, transparent 50%),
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px dashed rgba(255,255,255,.22);
+    }
+    .invite-text{
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight:700;
+      color: var(--txt);
+    }
+    .invite-text .script{ font-size: 1.15em }
+
+    /* ---------------------------------------------------------
+       LETTER (Content)
+       --------------------------------------------------------- */
+    #letterScene{ display:none; width:100%;}
+    .letter-wrap{
+      perspective: 1200px;
+      width:100%;
+      display:flex; justify-content:center;
+    }
+    .book{
+      width:min(var(--w-max), 100%);
+      transform-style: preserve-3d;
+      transform: rotateY(-14deg);
+      transition: transform .9s var(--ease), filter .9s var(--ease);
+      filter: drop-shadow(0 20px 60px #0008);
+    }
+    .book.open{ transform: rotateY(0deg) }
+    .page{
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      padding: clamp(18px, 3vw, 28px);
+      transform-origin: left center;
+      clip-path: inset(0 50% 0 0 round 18px);
+      transition: clip-path .9s var(--ease);
+    }
+    .page.open{ clip-path: inset(0 0 0 0 round 18px) }
+    .letter-title{
+      font-size: clamp(22px, 3.2vw, 30px);
+      margin: 6px 0 2px;
+      font-weight: 800;
+    }
+    .byline{ color: var(--muted); margin-bottom: 8px }
+    .content{ font-size: clamp(15.5px, 2.1vw, 17.5px); }
+    .content p{ margin: 0 0 14px }
+    .content em{ color:#ffd7f1; font-style: italic; }
+    .content .spaced{ margin-top: 18px }
+    .signature{
+      margin-top: 12px;
+      font-weight: 700;
+      display:inline-flex; align-items:baseline; gap:4px;
+      position:relative;
+    }
+    .shimmer{
+      background: linear-gradient(110deg, #ffffff22 0%, #ffffff88 18%, #ffffff22 33%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: shimmer 1.8s linear forwards;
+      background-size: 200% 100%;
+    }
+    @keyframes shimmer{
+      from{ background-position: -120% 0 }
+      to{ background-position: 120% 0 }
+    }
+    .caret{
+      width: 10px; height: 1.2em; border-right: 2px solid #ffffffaa;
+      animation: blink 1s step-end infinite;
+      transform: translateY(.15em);
+    }
+    @keyframes blink{ 50% { border-color: transparent } }
+    .signature.hide-caret .caret{ display:none }
+
+    .controls{
+      display:flex; gap:10px; margin-top: 10px; flex-wrap:wrap
+    }
+
+    /* ---------------------------------------------------------
+       AUDIO (small toggle)
+       --------------------------------------------------------- */
+    .audio-toggle{
+      position: fixed; right: 16px; bottom: 16px; z-index: 30;
+      display:flex; align-items:center; gap:8px;
+      padding: 10px 12px; border-radius: 14px;
+      background: rgba(255,255,255,.08);
+      border:1px solid var(--stroke);
+      box-shadow: var(--glow);
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .audio-toggle[aria-pressed="true"]{ outline: none; box-shadow: 0 0 0 3px #34d39955, var(--glow) }
+    .audio-label{ font-size: 13px; color: var(--muted) }
+
+    /* ---------------------------------------------------------
+       PARTICLES (petals + confetti)
+       --------------------------------------------------------- */
+    #fx{
+      position: fixed; inset:0; pointer-events:none; z-index: 10;
+    }
+
+    /* ---------------------------------------------------------
+       ACCESSIBILITY helpers
+       --------------------------------------------------------- */
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    /* ---------------------------------------------------------
+       REDUCED MOTION
+       --------------------------------------------------------- */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; }
+      .fade-out, .envIn, .book, .page{ filter:none !important; transform:none !important; }
+    }
+
+    /* ---------------------------------------------------------
+       RESPONSIVE TWEAKS
+       --------------------------------------------------------- */
+    @media (max-width: 390px){
+      .btn, .input{ font-size:15px }
+      .audio-toggle{ right:12px; bottom:12px }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <div class="container">
+    <div class="stack">
+      <!-- ======================================================
+           LOCK SCREEN
+           ====================================================== -->
+      <section id="lock" class="card" aria-label="Màn khóa mật khẩu">
+        <svg class="heart" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ff9bd2"/>
+              <stop offset="60%" stop-color="#c7a6ff"/>
+              <stop offset="100%" stop-color="#9be8ff"/>
+            </linearGradient>
+          </defs>
+          <path d="M32 57s-3-2-9-7C13 44 4 36 4 24 4 14 12 8 20 8c6 0 10 3 12 7 2-4 6-7 12-7 8 0 16 6 16 16 0 12-9 20-19 26-6 5-9 7-9 7z"
+                fill="url(#g)" stroke="#ffffff55" stroke-width="1"/>
+        </svg>
+
+        <div class="title script">Thư Gửi Vợ Yêu</div>
+        <div class="subtitle">Gợi ý: <em>ngày sinh vợ yêu</em> 💖</div>
+
+        <div class="field" role="group" aria-label="Nhập mật khẩu mở thư">
+          <input id="pwd" class="input" type="password" inputmode="numeric" maxlength="12"
+                 placeholder="Nhập mật khẩu…" autocomplete="off" aria-label="Mật khẩu" />
+          <button id="unlockBtn" class="btn" aria-label="Mở khóa">Mở</button>
+        </div>
+        <div id="err" class="error" aria-live="polite"></div>
+
+        <p class="hint">Nhập đúng mật khẩu để bắt đầu hành trình yêu thương nho nhỏ này nha 🫶</p>
+
+        <div class="controls" style="justify-content:center;">
+          <button id="skipAll" class="btn ghost" aria-label="Bỏ qua hiệu ứng">Bỏ qua hiệu ứng</button>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           ENVELOPE
+           ====================================================== -->
+      <section id="invite">
+        <div class="invite-wrap card" style="max-width:680px;">
+          <p class="lead">Có một điều muốn nói cùng <span id="wifeNameLead" class="script"></span>… Hít một hơi thật sâu,
+            mỉm cười và cùng mở chiếc thư nhỏ này nhé.</p>
+
+          <div id="env" class="envelope" data-tip="Bấm mở thư nha vợ yêu 💖" role="button" tabindex="0" aria-label="Vợ yêu click vào thư đi nè">
+            <div class="envelope-inner">
+              <div class="invite-text">
+                <span class="script">Vợ yêu click vào thư đi nè</span> 💌
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           LETTER
+           ====================================================== -->
+      <section id="letterScene">
+        <div class="letter-wrap">
+          <article class="book">
+            <div id="page" class="page">
+              <header>
+                <div class="byline serif">Gửi <span id="wifeNameTitle" class="script"></span>,</div>
+                <h1 class="letter-title script">Bức thư từ trái tim</h1>
+              </header>
+              <div id="content" class="content" aria-live="polite"></div>
+
+              <div class="controls">
+                <button id="replay" class="btn ghost" aria-label="Phát lại thư">Phát lại thư</button>
+                <button id="skip" class="btn ghost" aria-label="Hiện ngay toàn bộ">Bỏ qua hiệu ứng</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       AUDIO (lazy-loaded small built-in tone; starts after click)
+       ========================================================== -->
+  <button id="audioToggle" class="audio-toggle" aria-pressed="false" aria-label="Bật tắt nhạc nền" title="Nhạc nền">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="#c7a6ff" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>
+    </svg>
+    <span class="audio-label">Nhạc: Tắt</span>
+  </button>
+  <audio id="bgm" preload="none" loop></audio>
+
+  <script>
+    /* =========================================================
+       CONFIG
+       ========================================================= */
+    const PASS = "1003";
+    const WIFE_NAME = "Diệu Linh";
+
+    /* A tiny ~1s soft sine 'ping' WAV (very small). Looped quietly. */
+    const AUDIO_DATA =
+      "data:audio/wav;base64,UklGRmQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAAAABAAACaW5mbyBieSBDT0RFUgAAAAAA" +
+      "AAAAAABkAAAAAAAAgP8AAP8AgIAA/4AA/4AA/4AA/4AA/4AA/4AA/4AA/4AA/4AA/4AA/4AA/4AA/4AA/4AA"; // placeholder minimal wav
+
+    /* =========================================================
+       STATE
+       ========================================================= */
+    const el = (id)=>document.getElementById(id);
+    const lock = el('lock');
+    const invite = el('invite');
+    const env = el('env');
+    const letterScene = el('letterScene');
+    const page = el('page');
+    const book = document.querySelector('.book');
+    const contentEl = el('content');
+    const err = el('err');
+    const pwd = el('pwd');
+    const unlockBtn = el('unlockBtn');
+    const skip = el('skip');
+    const skipAll = el('skipAll');
+    const replay = el('replay');
+    const audioToggle = el('audioToggle');
+    const audioLabel = audioToggle.querySelector('.audio-label');
+    const bgm = el('bgm');
+
+    let tries = 0;
+    let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let petalsMax = Math.min(window.innerWidth < 768 ? 60 : 120, 120);
+    let typingAbort = false;
+    let hasConfettied = false;
+    let audioReady = false;
+    let audioOn = false;
+
+    /* =========================================================
+       ACCESSIBILITY helpers
+       ========================================================= */
+    function focusTrapWithin(node){
+      const focusables = node.querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])');
+      if(!focusables.length) return;
+      const first = focusables[0], last = focusables[focusables.length - 1];
+      node.addEventListener('keydown', e=>{
+        if(e.key !== 'Tab') return;
+        if(e.shiftKey && document.activeElement===first){ last.focus(); e.preventDefault(); }
+        else if(!e.shiftKey && document.activeElement===last){ first.focus(); e.preventDefault(); }
+      });
+    }
+    focusTrapWithin(lock);
+
+    /* =========================================================
+       PARTICLES (petals + confetti)   -- ANIMATIONS
+       ========================================================= */
+    const fx = el('fx');
+    const ctx = fx.getContext('2d');
+    let petals=[], confetti=[];
+    function resizeCanvas(){
+      fx.width = window.innerWidth * devicePixelRatio;
+      fx.height = window.innerHeight * devicePixelRatio;
+      ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    resizeCanvas();
+    const debounce = (fn, ms=150)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args),ms); }; };
+    window.addEventListener('resize', debounce(()=>{ resizeCanvas(); }, 150), {passive:true});
+
+    function rand(a,b){ return a + Math.random()*(b-a); }
+
+    function spawnPetal(){
+      if (petals.length >= petalsMax) return;
+      petals.push({
+        x: rand(0, window.innerWidth),
+        y: -20,
+        vx: rand(-.3,.3),
+        vy: rand(.6,1.1),
+        rot: rand(0, Math.PI*2),
+        vr: rand(-.02,.02),
+        size: rand(10,16),
+        hue: rand(320, 360) // hồng
+      });
+    }
+
+    function drawPetal(p){
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      const s = p.size;
+      // heart-like petal
+      ctx.fillStyle = `hsla(${p.hue}, 85%, 72%, .8)`;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-s*.5, -s*.6, -s, s*.1, 0, s);
+      ctx.bezierCurveTo(s, s*.1, s*.5, -s*.6, 0, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function spawnConfettiBurst(){
+      const N = 28;
+      for(let i=0;i<N;i++){
+        confetti.push({
+          x: window.innerWidth/2,
+          y: window.innerHeight/2,
+          vx: Math.cos((i/N)*Math.PI*2)*rand(1.2,3.2),
+          vy: Math.sin((i/N)*Math.PI*2)*rand(1.2,3.2)-1.2,
+          g: .035,
+          rot: rand(0,Math.PI*2),
+          vr: rand(-.2,.2),
+          size: rand(7,12),
+          hue: rand(300, 360)
+        });
+      }
+    }
+
+    function drawConfetti(c){
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.rot);
+      ctx.fillStyle = `hsla(${c.hue}, 95%, 65%, .95)`;
+      ctx.beginPath();
+      // tiny heart confetti
+      const s = c.size;
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-s*.5, -s*.5, -s, s*.1, 0, s);
+      ctx.bezierCurveTo(s, s*.1, s*.5, -s*.5, 0, 0);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,fx.width,fx.height);
+
+      // petals
+      if(!reduced && Math.random() < 0.35) spawnPetal();
+      for(let i=petals.length-1;i>=0;i--){
+        const p = petals[i];
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        if(p.y > window.innerHeight + 30) petals.splice(i,1);
+        else drawPetal(p);
+      }
+
+      // confetti
+      for(let i=confetti.length-1;i>=0;i--){
+        const c = confetti[i];
+        c.vy += c.g; c.x += c.vx; c.y += c.vy; c.rot += c.vr;
+        drawConfetti(c);
+        if(c.y > window.innerHeight + 40) confetti.splice(i,1);
+      }
+
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    /* =========================================================
+       AUDIO toggle logic
+       ========================================================= */
+    function ensureAudioLoaded(){
+      if(audioReady) return;
+      try{
+        bgm.src = AUDIO_DATA; // small built-in wav
+        bgm.volume = 0.25;
+        audioReady = true;
+      }catch(e){}
+    }
+    async function setAudio(on){
+      ensureAudioLoaded();
+      audioOn = on;
+      audioToggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+      audioLabel.textContent = `Nhạc: ${on?'Bật':'Tắt'}`;
+      try{
+        if(on){ await bgm.play(); }
+        else { bgm.pause(); }
+      }catch(e){
+        // ignore play rejection
+      }
+    }
+    audioToggle.addEventListener('click', ()=> setAudio(!audioOn));
+
+    /* =========================================================
+       LOCK SCREEN logic
+       ========================================================= */
+    function wrongGentle(){
+      lock.classList.remove('shake'); // reset
+      void lock.offsetWidth;
+      lock.classList.add('shake');
+      err.textContent = "Hình như chưa đúng, thử nhớ ngày đặc biệt của chúng mình nè!";
+      setTimeout(()=>lock.classList.remove('shake'), 360);
+    }
+
+    function openInvite(){
+      lock.classList.add('fade-out');
+      setTimeout(()=>{
+        lock.style.display='none';
+        // show invite
+        invite.style.display='flex';
+        // set wife name
+        document.getElementById('wifeNameLead').textContent = WIFE_NAME;
+      }, 720);
+    }
+
+    function validate(){
+      const val = pwd.value.trim();
+      if(val === PASS){ openInvite(); }
+      else{
+        tries++;
+        wrongGentle();
+      }
+    }
+
+    unlockBtn.addEventListener('click', validate);
+    pwd.addEventListener('keydown', (e)=>{ if(e.key==='Enter') validate(); });
+
+    // Skip all effects → show full letter right away
+    skipAll.addEventListener('click', async ()=>{
+      lock.style.display='none';
+      invite.style.display='none';
+      await showLetterScene(true);
+      renderLetter(true);
+    });
+
+    /* =========================================================
+       ENVELOPE interactions
+       ========================================================= */
+    function openEnvelope(){
+      invite.style.display='none';
+      showLetterScene(false).then(()=>{
+        // After first user gesture → we may start audio (browser policy)
+        setAudio(true);
+      });
+    }
+    env.addEventListener('click', openEnvelope);
+    env.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openEnvelope(); } });
+
+    /* =========================================================
+       LETTER typing
+       ========================================================= */
+    function templateLetter(){
+      // 7 đoạn ngắn (600–1200 từ) — chân thành, có mốc kỷ niệm, biết ơn, lời hứa, ước mơ chung.
+      return [
+`Hôm nay, anh muốn dành một khoảnh khắc thật chậm để viết cho ${WIFE_NAME} — người con gái đã khiến mọi điều bình thường trở nên dịu ngọt. Có thể ngoài kia vẫn là những lịch trình vội vàng, những việc phải làm nối đuôi nhau, nhưng chỉ cần nhớ về em, anh lại thấy lòng mình bình tĩnh và ấm áp lạ thường. *Có lẽ hạnh phúc không ồn ào, nó chỉ nhẹ nhàng như bàn tay em giữ lấy tay anh giữa đám đông.*`,
+`Anh nhớ cái ngày chúng mình bắt đầu đếm những mốc kỷ niệm nhỏ xíu rồi dần thành những dấu mốc thật lớn. Từ buổi hẹn đầu, đến cột mốc 1 tháng, 100 ngày, rồi từng mùa đi qua, tụi mình vẫn ở đó — cùng nhau. Anh biết mình không hoàn hảo, đôi khi cứng đầu, đôi lúc vụng về, nhưng anh đã và sẽ luôn cố gắng để xứng đáng với tình yêu mà em dành cho anh. *Cảm ơn em vì đã chọn anh, không phải khi anh tốt nhất, mà là khi anh còn đang học cách tốt hơn mỗi ngày.*`,
+`Có những tối muộn anh mệt nhoài trở về, đọc tin nhắn của em thôi cũng thấy như được tiếp thêm năng lượng. Có những buổi sáng mở mắt ra, điều đầu tiên anh muốn làm là kể cho em nghe những điều nho nhỏ anh vừa nghĩ đến. Tình yêu của mình hóa ra không cần những điều quá lớn lao — chỉ cần một cái ôm thật thật, một cái gật đầu “anh hiểu”, một câu “em tin anh”. *Yêu là cùng nhìn về một hướng, và cũng là biết lắng nghe khi người kia cần được quay lại nhìn chính mình.*`,
+`Anh biết có lúc chúng mình chưa thống nhất, có lúc trời đổ mưa trong lòng cả hai. Nhưng sau mỗi cuộc nói chuyện chân thành, anh lại thấy tụi mình trưởng thành thêm một chút, hiểu nhau thêm một chút. Nếu có điều gì khiến anh tự hào nhất, thì đó là: dù thế nào đi nữa, tụi mình vẫn chọn nhau. *Không phải tình yêu nào cũng yên ả, nhưng tình yêu nào cũng xứng đáng khi cả hai cùng vun đắp.*`,
+`Sau này, anh muốn cùng ${WIFE_NAME} đi qua thật nhiều nơi, chụp thật nhiều tấm ảnh, trồng một chậu cây nhỏ trên bậu cửa, và đặt trong nhà một chiếc kệ để xếp những cuốn sách em thích. Anh muốn cùng em nấu một bữa tối thật đơn giản, nghe một bản piano nhẹ, rồi kể cho nhau nghe chuyện của ngày hôm ấy. Anh muốn khi mệt, chúng mình có một chỗ để tựa vào — đó là bờ vai của nhau. *Tụi mình sẽ xây một tổ ấm mà ở đó, bình yên là điều hiển nhiên.*`,
+`Cảm ơn em vì những kiên nhẫn dịu dàng: nhắc anh uống nước, nhắc anh ngủ sớm, nhắc anh đừng ôm hết mọi chuyện vào lòng. Cảm ơn em vì những lúc em không nói gì, chỉ ở cạnh thôi mà đã đủ. Và cảm ơn em vì đã tin vào các kế hoạch của tụi mình — cả những giấc mơ còn đang vẽ dở. Anh hứa sẽ giữ gìn em thật kỹ, tôn trọng cảm xúc của em, và không để em phải một mình đối diện với điều gì cả. *Nếu có nỗi buồn nào đó ghé qua, hãy để anh nắm tay em đi qua nó.*`,
+`Từ khoảnh khắc này và nhiều năm nữa, anh muốn mình tiếp tục đếm những ngày kỷ niệm — không phải để khoe, mà để nhắc nhau rằng tụi mình đã đi được bao xa. Dù tương lai có đổi thay ra sao, tình yêu anh dành cho ${WIFE_NAME} sẽ vẫn kiên định, như cách mỗi sớm mai mặt trời lại mọc. Cảm ơn em vì đã đến, đã ở lại, và sẽ cùng anh đi tiếp. *Anh thương em — hôm nay, ngày mai, và rất nhiều ngày sau nữa.*`
+      ];
+    }
+
+    function makeParagraph(html){
+      const p = document.createElement('p');
+      p.innerHTML = html;
+      return p;
+    }
+
+    async function typeParagraph(el, text, opts){
+      if(reduced || opts.instant){
+        el.innerHTML = text;
+        return;
+      }
+      const speed = Math.round(rand(30, 45)); // ms/char
+      const delayBetween = Math.round(rand(150, 250));
+      el.textContent = '';
+      for(let i=0; i<text.length; i++){
+        if(typingAbort){ el.innerHTML = text; return; }
+        el.innerHTML += text[i];
+        await new Promise(r=>setTimeout(r, speed));
+      }
+      await new Promise(r=>setTimeout(r, delayBetween));
+    }
+
+    function signatureNode(){
+      const wrap = document.createElement('div');
+      wrap.className = 'signature';
+      const sign = document.createElement('span');
+      sign.className = 'shimmer script';
+      sign.textContent = '— Phát —';
+      const caret = document.createElement('span');
+      caret.className = 'caret';
+      wrap.appendChild(sign);
+      wrap.appendChild(caret);
+      // hide caret after a short while
+      setTimeout(()=>wrap.classList.add('hide-caret'), 1600);
+      return wrap;
+    }
+
+    async function renderLetter(instantly=false){
+      typingAbort = false;
+      hasConfettied = false;
+      contentEl.innerHTML = '';
+      const lead = makeParagraph(`<em>Mở thư ra, thấy em là thấy cả một bầu trời dịu.</em>`);
+      contentEl.appendChild(lead);
+
+      const blocks = templateLetter();
+      for(const html of blocks){
+        const p = makeParagraph(html);
+        contentEl.appendChild(p);
+        await typeParagraph(p, html, {instant: instantly});
+        if(typingAbort) break;
+      }
+      // signature
+      const spaced = document.createElement('p');
+      spaced.className = 'spaced';
+      spaced.appendChild(signatureNode());
+      contentEl.appendChild(spaced);
+
+      // confetti once done
+      if(!hasConfettied && !reduced){
+        spawnConfettiBurst();
+        hasConfettied = true;
+      }
+    }
+
+    async function showLetterScene(instantly){
+      letterScene.style.display='block';
+      document.getElementById('wifeNameTitle').textContent = WIFE_NAME;
+      book.classList.add('open');
+      setTimeout(()=> page.classList.add('open'), instantly? 0 : 150);
+      if(instantly){
+        await renderLetter(true);
+      }else{
+        await renderLetter(false);
+      }
+      // focus for keyboard users
+      replay.focus({preventScroll:true});
+    }
+
+    // replay & skip buttons
+    replay.addEventListener('click', ()=>{
+      contentEl.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
+      typingAbort = true;
+      setTimeout(()=>{ renderLetter(false); }, 30);
+    });
+    skip.addEventListener('click', ()=>{
+      typingAbort = true;
+      renderLetter(true);
+    });
+
+    /* =========================================================
+       INIT wife name into headings
+       ========================================================= */
+    document.title = `Thư Gửi Vợ Yêu • ${WIFE_NAME}`;
+
+    /* =========================================================
+       LITTLE UX sugar: focus the input on load
+       ========================================================= */
+    window.addEventListener('load', ()=>{
+      document.getElementById('wifeNameLead').textContent = WIFE_NAME;
+      pwd.focus();
+    });
+
+    /* =========================================================
+       SAFETY: prevent layout thrash where possible
+       ========================================================= */
+    page.style.willChange = 'clip-path';
+    book.style.willChange = 'transform';
+  </script>
+</body>
+</html>
