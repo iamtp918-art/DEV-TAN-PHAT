@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Thư Gửi Vợ Yêu</title>
+  <meta name="color-scheme" content="dark light">
+  <style>
+    /* =========================================================
+       THEME — "AIRMAIL • LONG DISTANCE LOVE"
+       - Giao diện mới: tem thư, dấu bưu cục, đường bay chấm chấm
+       - Glassmorphism nhẹ trên nền đêm xanh, điểm xuyết đỏ–xanh airmail
+       ========================================================= */
+    :root{
+      --ink:#ecf2ff;
+      --muted:#b9c3dc;
+      --bg:#0c1222;
+      --bg2:#0a0f1c;
+      --stroke:#ffffff1a;
+      --glass1:rgba(255,255,255,.10);
+      --glass2:rgba(255,255,255,.06);
+      --air-red:#ff7a96;
+      --air-blue:#78b7ff;
+      --accent:#ffd699;
+      --radius:22px;
+      --radius-lg:26px;
+      --shadow:0 18px 60px #000a, inset 0 1px 0 #ffffff18;
+      --ease:cubic-bezier(.2,.8,.2,1);
+      --maxw:760px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--ink);
+      font:16px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1600px 1000px at 10% -10%, #3740a322, transparent 60%),
+        radial-gradient(1600px 1000px at 110% 5%, #ff7a9622, transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    .serif{font-family: Georgia,"Times New Roman",ui-serif,serif}
+    .script{font-family: "Segoe Script","Apple Chancery","Lucida Handwriting","Brush Script MT", Georgia, serif; letter-spacing:.2px}
+
+    /* Airmail border ribbon for cards */
+    .airmail::after{
+      content:""; position:absolute; inset:-1px; border-radius:calc(var(--radius-lg) + 2px);
+      pointer-events:none; background:
+        repeating-linear-gradient(135deg,
+          var(--air-red) 0 16px, transparent 16px 24px,
+          var(--air-blue) 24px 40px, transparent 40px 48px);
+      mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+      -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+      mask-composite: exclude; -webkit-mask-composite: xor;
+      padding:3px; opacity:.14; filter: blur(.5px);
+    }
+
+    /* Subtle stars */
+    .stars{ position:fixed; inset:0; pointer-events:none; z-index:0;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, #ffffff66 50%, transparent 51%),
+        radial-gradient(1px 1px at 30% 75%, #ffffff66 50%, transparent 51%),
+        radial-gradient(1.2px 1.2px at 65% 35%, #ffffff66 50%, transparent 51%),
+        radial-gradient(1px 1px at 85% 60%, #ffffff66 50%, transparent 51%);
+      opacity:.35; animation: drift 26s linear infinite alternate;
+    }
+    @keyframes drift{ from{ transform: translateY(-6px)} to{ transform: translateY(6px)} }
+
+    .container{min-height:100%; display:flex; align-items:center; justify-content:center; padding:clamp(16px,3vw,40px); position:relative; z-index:1}
+    .stack{width:min(var(--maxw),100%); display:flex; flex-direction:column; gap:18px; align-items:center}
+
+    .card{
+      width:min(var(--maxw),100%);
+      background: linear-gradient(180deg, var(--glass1), var(--glass2));
+      backdrop-filter: blur(16px) saturate(120%);
+      -webkit-backdrop-filter: blur(16px) saturate(120%);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius-lg);
+      box-shadow:var(--shadow);
+      padding: clamp(18px, 3vw, 30px);
+      position:relative;
+    }
+
+    /* ======================= LOCK SCREEN ======================= */
+    #lock{max-width:660px; text-align:center}
+    .crest{display:flex; justify-content:center; gap:10px; align-items:center}
+    .plane{
+      width:54px; height:54px; display:block;
+      filter: drop-shadow(0 10px 18px #78b7ff44) drop-shadow(0 0 22px #ff7a9633);
+    }
+    .title{
+      font-size:clamp(24px,3.9vw,36px); font-weight:900; margin:6px 0 2px;
+      background:linear-gradient(100deg, var(--accent), #ff9ac7 55%, #78b7ff);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow:0 1px 0 #0007;
+    }
+    .subtitle{color:var(--muted)}
+    .hint{color:var(--muted); font-size:13px}
+    .field{display:flex; gap:10px; justify-content:center; margin-top:10px}
+    .input{
+      width:100%; max-width:380px; padding:12px 14px; border-radius:14px;
+      background:rgba(255,255,255,.08); color:var(--ink); border:1px solid var(--stroke); outline:none; font-size:16px;
+      box-shadow: inset 0 -1px 0 #ffffff14, 0 10px 26px #0005; transition: box-shadow .2s var(--ease), transform .2s var(--ease);
+    }
+    .input:focus{ box-shadow: 0 0 0 3px #78b7ff66, 0 0 0 1px #ffffff1a }
+    .btn{
+      appearance:none; border:0; padding:12px 16px; border-radius:14px; cursor:pointer; font-weight:900; letter-spacing:.3px;
+      color:#0b0b14; background: linear-gradient(140deg, var(--accent), #ff8dbb 60%, #78b7ff 120%);
+      box-shadow: 0 12px 30px #0008, inset 0 1px 0 #ffffffaa; transition: transform .15s var(--ease), filter .2s var(--ease);
+    }
+    .btn:hover{ filter: brightness(1.05) }
+    .btn:active{ transform: translateY(1px) scale(.995) }
+    .ghost{ background: rgba(255,255,255,.08); color: var(--ink); font-weight:700 }
+    .error{ color: #ffd6a3; min-height:18px; font-size:14px; margin-top:6px }
+    .shake{ animation: shakeX .34s var(--ease) }
+    @keyframes shakeX{ 0%{transform:translateX(0)} 25%{transform:translateX(-4px)} 50%{transform:translateX(3px)} 75%{transform:translateX(-2px)} 100%{transform:translateX(0)} }
+    .fade-out{ animation: fadeOut .75s var(--ease) forwards }
+    @keyframes fadeOut{ to{ opacity:0; filter: blur(6px); transform: scale(.985)} }
+
+    /* ======================= ENVELOPE (airmail) ======================= */
+    #invite{display:none}
+    .invite-wrap{display:flex; flex-direction:column; gap:14px; align-items:center; text-align:center}
+    .lead{color:var(--muted)}
+    .envelope{
+      width:min(560px,92vw); aspect-ratio: 4/2.6; border-radius:18px; cursor:pointer; position:relative; overflow:hidden;
+      border:1px solid var(--stroke); box-shadow:var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      transform: scale(.96); filter: blur(2px); animation: envIn .9s var(--ease) .1s forwards;
+    }
+    @keyframes envIn{ to{ transform: scale(1); filter: blur(0)} }
+    /* edge stripes */
+    .envelope::before{
+      content:""; position:absolute; inset:0; border-radius:18px; padding:8px; pointer-events:none;
+      background:
+        repeating-linear-gradient(45deg,
+        var(--air-red) 0 16px, transparent 16px 24px,
+        var(--air-blue) 24px 40px, transparent 40px 48px);
+      mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+      -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+      mask-composite: exclude; -webkit-mask-composite: xor; opacity:.25;
+    }
+    .flap{ position:absolute; left:0; right:0; top:0; height:52%; transform-origin: top center;
+      background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.06));
+      border-top-left-radius:18px; border-top-right-radius:18px; border-bottom:0; border:1px solid var(--stroke);
+      transition: transform .85s var(--ease); box-shadow: inset 0 -20px 40px #0006;
+    }
+    .envelope.open .flap{ transform: rotateX(-150deg) }
+    .card-core{ position:absolute; inset:14% 6% 12% 6%; display:grid; place-items:center; border-radius:14px;
+      border:1px dashed #ffffff30; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+    }
+    .invite-text{ font-weight:900; font-size:clamp(18px,3.2vw,24px) }
+    .stamp{
+      position:absolute; right:14px; top:14px; width:74px; height:74px; border-radius:8px;
+      background: radial-gradient(circle at 35% 30%, #fff2c7, #ffd499 70%, #c9a86b 100%);
+      box-shadow: 0 6px 18px #0007; display:grid; place-items:center; transform: rotate(6deg);
+    }
+    .seal{
+      position:absolute; left:50%; top:48%; transform: translate(-50%,-50%); width:74px; height:74px; border-radius:50%;
+      background: radial-gradient(circle at 35% 30%, #fff0, #fff0), radial-gradient(circle at 35% 30%, #ff9dc2, #ff6ba5 60%, #c83e7f 100%);
+      box-shadow: inset 0 2px 4px #ffffff80, 0 12px 26px #0008; display:grid; place-items:center;
+    }
+    .route{
+      position:absolute; inset:0; pointer-events:none; opacity:.6;
+    }
+    .route svg{ width:100%; height:100% }
+
+    /* ======================= LETTER ======================= */
+    #letterScene{display:none}
+    .book{ width:min(var(--maxw),100%); margin-inline:auto; perspective:1200px }
+    .page{
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid var(--stroke); border-radius:18px; box-shadow:var(--shadow);
+      padding: clamp(20px, 3vw, 30px);
+      transform-origin: top; transform: rotateX(-10deg) translateY(-6px);
+      transition: transform .9s var(--ease), filter .9s var(--ease); position:relative;
+    }
+    .page.open{ transform: rotateX(0) translateY(0) }
+    .page::before{
+      content:""; position:absolute; inset:-2px; border-radius:20px; z-index:-1;
+      background: conic-gradient(from 100deg, #ff9ac755, #ffd69955, #78b7ff55, #ff9ac755);
+      filter: blur(16px); opacity:.55;
+    }
+    .byline{ color: var(--muted) }
+    .letter-title{ font-size:clamp(22px,3.2vw,30px); margin:.2rem 0 .2rem; font-weight:900 }
+    .content{ font-size:clamp(15.6px,2.1vw,17.8px) }
+    .content p{ margin:0 0 14px }
+    .content em{ color:#ffd8f1; font-style:italic }
+    .signature{ margin-top:10px; display:inline-flex; gap:6px; align-items:baseline; font-weight:900 }
+    .shimmer{
+      background: linear-gradient(110deg, #ffffff22 0%, #ffffffaa 18%, #ffffff22 36%); -webkit-background-clip:text; background-clip:text; color:transparent;
+      animation: shimmer 2s linear forwards; background-size:200% 100%;
+    }
+    @keyframes shimmer{ from{ background-position: -120% 0 } to{ background-position: 120% 0 } }
+    .caret{ width:10px; height:1.2em; border-right:2px solid #ffffffcc; animation: blink 1s step-end infinite; transform: translateY(.15em)}
+    @keyframes blink{ 50%{ border-color: transparent } }
+    .signature.hide .caret{ display:none }
+    .controls{ display:flex; gap:10px; margin-top:10px; flex-wrap:wrap }
+
+    /* ======================= AUDIO TOGGLE ======================= */
+    .audio-toggle{
+      position:fixed; right:16px; bottom:16px; z-index:40;
+      display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:14px;
+      background: rgba(255,255,255,.10); color: var(--ink); border:1px solid var(--stroke); box-shadow:var(--shadow); cursor:pointer; user-select:none;
+    }
+    .audio-toggle[aria-pressed="true"]{ box-shadow: 0 0 0 3px #34d39955, var(--shadow) }
+    .audio-label{ font-size:13px; opacity:.95 }
+
+    /* ======================= PARTICLES CANVAS ======================= */
+    #fx{ position:fixed; inset:0; pointer-events:none; z-index:10 }
+
+    /* ======================= ACCESSIBILITY ======================= */
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important }
+      .fade-out, .page{ filter:none !important; transform:none !important }
+    }
+    @media (max-width:390px){ .btn,.input{font-size:15px} .audio-toggle{ right:12px; bottom:12px } }
+  </style>
+</head>
+<body>
+  <!-- STAR BACKDROP -->
+  <div class="stars" aria-hidden="true"></div>
+
+  <!-- ==========================================================
+       PARTICLES (petals/confetti)
+       ========================================================== -->
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <div class="container">
+    <div class="stack">
+      <!-- ======================================================
+           LOCK SCREEN
+           ====================================================== -->
+      <section id="lock" class="card airmail" aria-label="Màn khóa mật khẩu">
+        <div class="crest" aria-hidden="true">
+          <!-- tiny paper plane -->
+          <svg class="plane" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M6 32L58 8 44 56 31 36l-25-4z" fill="#78b7ff"/>
+            <path d="M58 8 31 36l-6 14 0-18z" fill="#ff9ac7"/>
+          </svg>
+        </div>
+        <div class="title script">Thư Gửi Vợ Yêu</div>
+        <p class="subtitle">Gợi ý: <em>ngày sinh vợ yêu</em> 💖</p>
+
+        <div class="field" role="group" aria-label="Nhập mật khẩu mở thư">
+          <input id="pwd" class="input" type="password" inputmode="numeric" maxlength="12" placeholder="Nhập mật khẩu…" autocomplete="off" aria-label="Mật khẩu">
+          <button id="unlockBtn" class="btn" aria-label="Mở khóa">Mở</button>
+        </div>
+        <div id="err" class="error" aria-live="polite"></div>
+        <p class="hint">Nhập đúng mật khẩu để mở chiếc thư bay qua bầu trời đến em nha ✈️</p>
+
+        <div class="controls" style="display:flex;justify-content:center;gap:10px;margin-top:8px">
+          <button id="skipAll" class="btn ghost" aria-label="Bỏ qua hiệu ứng">Bỏ qua hiệu ứng</button>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           ENVELOPE
+           ====================================================== -->
+      <section id="invite" class="card airmail" style="display:none;">
+        <div class="invite-wrap">
+          <p class="lead">Từ nơi này tới nơi em là những đường bay nối dài. Mở thư nhé, <span id="wifeNameLead" class="script"></span>.</p>
+
+          <div id="env" class="envelope" role="button" tabindex="0" aria-label="Vợ yêu click vào thư đi nè" title="Bấm mở thư nha vợ yêu 💖">
+            <div class="route" aria-hidden="true">
+              <svg viewBox="0 0 800 520">
+                <defs>
+                  <marker id="dot" markerWidth="6" markerHeight="6" refX="3" refY="3">
+                    <circle cx="3" cy="3" r="3" fill="#ffd699"/>
+                  </marker>
+                </defs>
+                <path d="M120 360 C 260 300, 420 220, 680 180" stroke="#ffd699" stroke-width="2" fill="none" stroke-dasharray="6 10" marker-start="url(#dot)" marker-end="url(#dot)"/>
+              </svg>
+            </div>
+            <div class="flap" aria-hidden="true"></div>
+            <div class="card-core">
+              <div class="invite-text"><span class="script">Vợ yêu click vào thư đi nè</span> 💌</div>
+            </div>
+            <div class="stamp" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#2f2538" d="M12 21s-2.4-1.7-6.8-5.4C2.2 13.2 1 10.7 1 8.3 1 5.4 3.3 3.5 5.6 3.5c2 0 3.4 1 4.2 2.3c.8-1.3 2.2-2.3 4.2-2.3c2.3 0 4.5 1.9 4.5 4.8c0 2.4-1.2 4.9-4.2 7.4C14.4 19.3 12 21 12 21z"/>
+              </svg>
+            </div>
+            <div class="seal" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#fff" d="M12 21s-2.4-1.7-6.8-5.4C2.2 13.2 1 10.7 1 8.3 1 5.4 3.3 3.5 5.6 3.5c2 0 3.4 1 4.2 2.3c.8-1.3 2.2-2.3 4.2-2.3c2.3 0 4.5 1.9 4.5 4.8c0 2.4-1.2 4.9-4.2 7.4C14.4 19.3 12 21 12 21z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           LETTER
+           ====================================================== -->
+      <section id="letterScene" class="card airmail" style="display:none;">
+        <div class="book">
+          <article id="page" class="page" aria-live="polite">
+            <header>
+              <div class="byline serif">Gửi <span id="wifeNameTitle" class="script"></span>,</div>
+              <h1 class="letter-title script">Từ thành phố của anh tới bầu trời của em</h1>
+            </header>
+            <div id="content" class="content"></div>
+
+            <div class="controls">
+              <button id="replay" class="btn ghost" aria-label="Phát lại thư">Phát lại thư</button>
+              <button id="skip" class="btn ghost" aria-label="Hiện ngay toàn bộ">Bỏ qua hiệu ứng</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       AUDIO (WebAudio: ambient keys; phát sau thao tác)
+       ========================================================== -->
+  <button id="audioToggle" class="audio-toggle" aria-pressed="false" aria-label="Bật tắt nhạc nền" title="Nhạc nền">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+    <span class="audio-label">Nhạc: Tắt</span>
+  </button>
+
+  <script>
+    /* =========================================================
+       CONFIG (biến cấu hình đầu file)
+       ========================================================= */
+    const PASS = "1003";
+    const WIFE_NAME = "Diệu Linh";
+
+    /* =========================================================
+       DOM SHORTCUTS & STATE
+       ========================================================= */
+    const $ = id => document.getElementById(id);
+    const lock = $('lock'), invite = $('invite'), env = $('env'),
+          letterScene = $('letterScene'), page = $('page'),
+          contentEl = $('content'), pwd = $('pwd'), unlockBtn = $('unlockBtn'),
+          err = $('err'), skip = $('skip'), skipAll = $('skipAll'), replay = $('replay');
+    const audioToggle = $('audioToggle'), audioLabel = audioToggle.querySelector('.audio-label');
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let typingAbort=false, hasConfettied=false, musicOn=false;
+
+    /* =========================================================
+       ACCESSIBILITY
+       ========================================================= */
+    function focusTrapWithin(node){
+      const f = node.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])');
+      if(!f.length) return; const first=f[0], last=f[f.length-1];
+      node.addEventListener('keydown', e=>{
+        if(e.key!=='Tab') return;
+        if(e.shiftKey && document.activeElement===first){ last.focus(); e.preventDefault(); }
+        else if(!e.shiftKey && document.activeElement===last){ first.focus(); e.preventDefault(); }
+      });
+    }
+    focusTrapWithin(lock);
+
+    /* =========================================================
+       PARTICLES (petals + confetti)
+       ========================================================= */
+    const fx = $('fx'); const ctx = fx.getContext('2d');
+    let petals=[], confetti=[];
+    function resizeCanvas(){ fx.width = innerWidth*devicePixelRatio; fx.height = innerHeight*devicePixelRatio; ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
+    const debounce=(fn,ms=150)=>{let t; return (...a)=>{clearTimeout(t); t=setTimeout(()=>fn(...a),ms)}};
+    resizeCanvas(); addEventListener('resize', debounce(resizeCanvas,140), {passive:true});
+    const R=(a,b)=>a+Math.random()*(b-a);
+
+    function spawnPetal(){ const cap = innerWidth<768?50:110; if(petals.length>=cap) return;
+      petals.push({x:R(0,innerWidth), y:-20, vx:R(-.28,.28), vy:R(.6,1.05), r:R(0,Math.PI*2), vr:R(-.02,.02), s:R(9,15), h:R(318,360)});
+    }
+    function drawPetal(p){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle=`hsla(${p.h},85%,72%,.85)`; const s=p.s;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.bezierCurveTo(-s*.5,-s*.6,-s,s*.1,0,s); ctx.bezierCurveTo(s,s*.1,s*.5,-s*.6,0,0); ctx.fill(); ctx.restore();
+    }
+    function confettiBurst(){ for(let i=0;i<28;i++){ confetti.push({x:innerWidth/2,y:innerHeight/2,vx:Math.cos(i/28*Math.PI*2)*R(1.2,3),vy:Math.sin(i/28*Math.PI*2)*R(1.2,3)-1,g:.038,r:R(0,Math.PI*2),vr:R(-.19,.19),s:R(7,12),h:R(300,360)}); } }
+    function drawConfetti(c){ ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.r); ctx.fillStyle=`hsla(${c.h},95%,65%,.95)`; const s=c.s;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.bezierCurveTo(-s*.5,-s*.5,-s,s*.1,0,s); ctx.bezierCurveTo(s,s*.1,s*.5,-s*.5,0,0); ctx.fill(); ctx.restore();
+    }
+    function tick(){
+      ctx.clearRect(0,0,fx.width,fx.height);
+      if(!reduced && Math.random()<.33) spawnPetal();
+      for(let i=petals.length-1;i>=0;i--){ const p=petals[i]; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; drawPetal(p); if(p.y>innerHeight+30) petals.splice(i,1); }
+      for(let i=confetti.length-1;i>=0;i--){ const c=confetti[i]; c.vy+=c.g; c.x+=c.vx; c.y+=c.vy; c.r+=c.vr; drawConfetti(c); if(c.y>innerHeight+40) confetti.splice(i,1); }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    /* =========================================================
+       AUDIO — WebAudio (no external file)
+       ========================================================= */
+    let ac=null, master=null, loopId=null;
+    function ensureAudio(){ if(ac) return; try{ ac=new (window.AudioContext||window.webkitAudioContext)(); master=ac.createGain(); master.gain.value=.25; master.connect(ac.destination);}catch(e){} }
+    function n(freq,dur,t,type='sine',gain=.16){ const o=ac.createOscillator(); const g=ac.createGain(); const f=ac.createBiquadFilter(); f.type='lowpass'; f.frequency.value=1800;
+      o.type=type; o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(gain,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+      o.connect(g).connect(f).connect(master); o.start(t); o.stop(t+dur+.02);
+    }
+    function bar(root,t){ n(root,1.6,t,'sine',.14); n(root*1.2599,1.6,t+.03,'triangle',.11); n(root*1.4983,1.6,t+.06,'sine',.10); n(root*2,.26,t+.9,'sine',.09); }
+    async function setMusic(on){
+      ensureAudio(); if(!ac) return; musicOn=on; audioToggle.setAttribute('aria-pressed', on?'true':'false'); audioLabel.textContent=`Nhạc: ${on?'Bật':'Tắt'}`;
+      if(on){
+        if(ac.state==='suspended'){ try{ await ac.resume(); }catch(e){} }
+        const t0 = ac.currentTime + .05, roots=[261.63,220.00,174.61,196.00]; // C A F G
+        for(let b=0;b<8;b++){ bar(roots[b%4], t0+b*1.75); }
+        clearTimeout(loopId); loopId=setTimeout(()=>{ if(musicOn) setMusic(true); }, 8*1750);
+      }else{
+        clearTimeout(loopId); if(ac.state!=='suspended'){ try{ await ac.suspend(); }catch(e){} }
+      }
+    }
+    audioToggle.addEventListener('click', ()=> setMusic(!musicOn));
+
+    /* =========================================================
+       LOCK SCREEN LOGIC
+       ========================================================= */
+    function wrong(){
+      lock.classList.remove('shake'); void lock.offsetWidth; lock.classList.add('shake');
+      err.textContent="Hình như chưa đúng, thử nhớ ngày đặc biệt của chúng mình nè!";
+      setTimeout(()=>lock.classList.remove('shake'),360);
+    }
+    function openInvite(){
+      lock.classList.add('fade-out');
+      setTimeout(()=>{
+        lock.style.display='none';
+        invite.style.display='block';
+        $('wifeNameLead').textContent=WIFE_NAME;
+        setTimeout(()=> document.querySelector('.envelope').classList.add('open'), 80);
+      },760);
+    }
+    unlockBtn.addEventListener('click', ()=> pwd.value.trim()===PASS ? openInvite() : wrong());
+    pwd.addEventListener('keydown', e=>{ if(e.key==='Enter'){ pwd.value.trim()===PASS ? openInvite() : wrong(); } });
+
+    // Skip all → show letter instantly
+    skipAll.addEventListener('click', async ()=>{
+      lock.style.display='none'; invite.style.display='none';
+      await showLetter(true); renderLetter(true);
+    });
+
+    /* =========================================================
+       ENVELOPE INTERACTIONS
+       ========================================================= */
+    function enterLetter(){
+      setMusic(true); // user gesture → OK
+      invite.style.display='none';
+      showLetter(false);
+    }
+    env?.addEventListener('click', enterLetter);
+    env?.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); enterLetter(); } });
+
+    /* =========================================================
+       LETTER CONTENT (Long-distance version)
+       ========================================================= */
+    function letterBlocks(){
+      return [
+`Ở thành phố của anh, bầu trời tối xuống chậm hơn một chút. Ở nơi em, có lẽ gió đang khác và tiếng xe cũng khác. Nhưng mỗi khi nhìn lên sao, anh tưởng như nghe thấy em thở khẽ bên tai. *Khoảng cách có thể đo bằng cây số, còn gần gũi được đo bằng cách mình nhớ nhau thế nào.*`,
+`Có những tối em bảo “nhớ”, rồi cười trừ vì không biết làm gì thêm được. Anh cũng vậy—gập máy lại mà đôi tay chẳng biết cất đi đâu. Anh biết có lúc em tủi thân vì những cuộc hẹn dời lại, vì muốn ôm mà chỉ có thể gửi emoji. *Khi em buồn, anh cũng buồn lắm; nhưng chính vì thế, anh càng muốn học cách yêu em tốt hơn qua từng tin nhắn, từng cuộc gọi.*`,
+`Chúng mình đã có những nghi thức nhỏ: báo nhau “đã về đến nhà”, gửi tấm ảnh bữa tối đơn giản, mở video call để im lặng cùng nhau mười phút. Những thứ tưởng nhỏ ấy lại giữ cho trái tim không đi lạc. Anh trân trọng từng khoảnh khắc đó như giữ một chiếc vé tàu — biết chắc rằng một ngày rất gần, tụi mình sẽ bước lên và ngồi cạnh nhau nhìn phong cảnh chạy lùi.`,
+`Nếu em có ngày mỏi mệt, đừng cố mạnh mẽ một mình. Kể anh nghe về việc làm em thấy chùn, về bữa ăn không ngon, về cơn mưa bất chợt. Anh sẽ không vội giải quyết, anh sẽ lắng nghe trước, rồi nói “ổn thôi, để anh ôm em bằng lời trước đã”. *Tin anh, lời ôm cũng có nhiệt độ.*`,
+`Anh thương cách em tin vào hai chữ “chờ đợi” mà không nản. Cảm ơn em vì vẫn nhắn “ngủ sớm nha”, vì vẫn hỏi “hôm nay có điều gì vui?”, vì những buổi sáng dặn anh mặc ấm. Những quan tâm ấy bắc thành cây cầu giữa hai nơi. *Cầu càng dài càng cần người giữ, và anh xin được là người đó cùng em.*`,
+`Chúng mình cùng mơ nhé: một căn bếp có ly cốc đôi, bậu cửa có chậu húng, và bản đồ với những chiếc ghim đã đến. Những ngày đầu về chung, có thể sẽ lộn xộn, có khi cãi nhau chuyện vặt. Nhưng rồi mình học cách xin lỗi nhanh hơn, ôm nhau lâu hơn, và đặt lịch hẹn hò ngay trong phòng khách. *Tương lai của mình không xa—nó đang đến gần bằng mỗi ngày nỗ lực của cả hai.*`,
+`Dù bây giờ vẫn là hai thành phố, anh muốn em nhớ điều này: em không cô đơn trong nỗi nhớ. Mỗi lần điện thoại rung, tim anh đều mềm đi một chút vì biết ở đầu kia là em. Anh cảm ơn vì em đã chọn ở lại, đã tin rằng yêu xa không làm tình yêu ít đi, chỉ làm nó sâu hơn. *Khi nào nhớ quá, ngẩng nhìn bầu trời—chúng ta đang nhìn cùng một vòm trời mà.*`,
+`Nếu một hôm em thấy trời nhiều mây, nhắn cho anh chữ “ôm”. Anh sẽ gọi ngay, đọc cho em nghe một đoạn sách, hay im lặng nghe tiếng em thở đều. Và đến ngày vé có tên cả hai chúng mình, anh sẽ là người đứng ở cổng đến, ôm em thật chặt, bù cho tất cả những lần chỉ có emoji.`
+      ];
+    }
+
+    function P(html){ const p=document.createElement('p'); p.innerHTML=html; return p; }
+
+    async function typeParagraph(node, html, instantly){
+      if(reduced || instantly){ node.innerHTML = html; return; }
+      const speed = Math.round(28 + Math.random()*14), gap = Math.round(150 + Math.random()*90);
+      node.textContent='';
+      for(let i=0;i<html.length;i++){
+        if(typingAbort){ node.innerHTML = html; return; }
+        node.innerHTML += html[i];
+        await new Promise(r=>setTimeout(r, speed));
+      }
+      await new Promise(r=>setTimeout(r, gap));
+    }
+
+    function signatureNode(){
+      const wrap=document.createElement('div'); wrap.className='signature';
+      const sign=document.createElement('span'); sign.className='shimmer script'; sign.textContent='— Phát —';
+      const caret=document.createElement('span'); caret.className='caret';
+      wrap.appendChild(sign); wrap.appendChild(caret);
+      setTimeout(()=>wrap.classList.add('hide'), 1800);
+      return wrap;
+    }
+
+    async function renderLetter(instantly=false){
+      typingAbort=false; hasConfettied=false; contentEl.innerHTML='';
+      contentEl.appendChild(P(`<em>Từ anh đến em là một đường bay, và trái tim thì không cần quá cảnh.</em>`));
+      for(const html of letterBlocks()){
+        const p=P(html); contentEl.appendChild(p);
+        await typeParagraph(p, html, instantly);
+        if(typingAbort) break;
+      }
+      const fin=document.createElement('p'); fin.appendChild(signatureNode()); contentEl.appendChild(fin);
+      if(!hasConfettied && !reduced){ confettiBurst(); hasConfettied=true; }
+    }
+
+    async function showLetter(instantly){
+      letterScene.style.display='block';
+      $('wifeNameTitle').textContent=WIFE_NAME;
+      setTimeout(()=> page.classList.add('open'), instantly?0:140);
+      await renderLetter(instantly);
+      replay.focus({preventScroll:true});
+    }
+
+    // Replay & Skip
+    replay.addEventListener('click', ()=>{
+      contentEl.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
+      typingAbort=true; setTimeout(()=>renderLetter(false),30);
+    });
+    skip.addEventListener('click', ()=>{ typingAbort=true; renderLetter(true); });
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+    document.title = `Thư Gửi Vợ Yêu • ${WIFE_NAME}`;
+    addEventListener('load', ()=>{ $('wifeNameLead').textContent=WIFE_NAME; pwd.focus(); });
+  </script>
+</body>
+</html>
